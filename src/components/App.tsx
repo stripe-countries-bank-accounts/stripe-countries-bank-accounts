@@ -1,7 +1,118 @@
 import React from 'react'
+import { Form, Input, Button } from 'antd'
+import { Controller } from 'react-hook-form'
+import { Label } from './styles'
+import { bankInfoObject } from '../bank-info-object'
+import { BusinessType } from '../enums'
+import useBankDetailsForm from '../hooks/useBankDetailsForm'
 
-const CountryBankAccount = () => {
-  return <div>form for country</div>
+interface Result {
+  routing_number: string
+  account_number: string
+  account_holder_first_name?: string
+  account_holder_last_name?: string
+}
+
+interface Props {
+  countryCode?: keyof typeof bankInfoObject
+  businessType?: string
+  onComplete?: (res: Result) => void
+}
+
+const CountryBankAccount = ({ countryCode, businessType, onComplete }: Props) => {
+  const countryData = countryCode && bankInfoObject[countryCode]
+
+  const { bankDetailsFormControl, bankDetailsFormErrors, setValue, bankDetailsFormState, submitBankDetailsForm } =
+    useBankDetailsForm(countryData, onComplete)
+  return (
+    <Form onFinish={() => submitBankDetailsForm()}>
+      {businessType === BusinessType.COMPANY && (
+        <Form.Item
+          validateStatus={bankDetailsFormErrors?.['accountOwnerFirstName'] ? 'error' : ''}
+          help={bankDetailsFormErrors.accountOwnerFirstName?.message}
+        >
+          <Label>
+            Account Owner First Name <sup>*</sup>
+          </Label>
+          <Controller
+            render={({ field }) => <Input type='text' {...field} />}
+            name='accountOwnerFirstName'
+            control={bankDetailsFormControl}
+          />
+        </Form.Item>
+      )}
+      {businessType === BusinessType.COMPANY && (
+        <Form.Item
+          validateStatus={bankDetailsFormErrors?.['accountOwnerLastName'] ? 'error' : ''}
+          help={bankDetailsFormErrors.accountOwnerLastName?.message}
+        >
+          <Label>
+            Account Owner Last Name <sup>*</sup>
+          </Label>
+          <Controller
+            render={({ field }) => <Input type='text' {...field} />}
+            name='accountOwnerLastName'
+            control={bankDetailsFormControl}
+          />
+        </Form.Item>
+      )}
+      <Form.Item
+        validateStatus={bankDetailsFormErrors?.['routingNumber1'] ? 'error' : ''}
+        help={bankDetailsFormErrors.routingNumber1?.message}
+      >
+        <Label>
+          <sup>*</sup>
+        </Label>
+        <Controller
+          render={({ field }) => <Input {...field} placeholder={''} />}
+          name='routingNumber1'
+          control={bankDetailsFormControl}
+        />
+      </Form.Item>
+
+      <Form.Item
+        validateStatus={bankDetailsFormErrors?.['routingNumber2'] ? 'error' : ''}
+        help={bankDetailsFormErrors.routingNumber2?.message}
+      >
+        <Label>
+          <sup>*</sup>
+        </Label>
+        <Controller
+          render={({ field }) => <Input {...field} placeholder={''} />}
+          name='routingNumber2'
+          control={bankDetailsFormControl}
+        />
+      </Form.Item>
+      <Form.Item
+        validateStatus={bankDetailsFormErrors?.['accountNumber'] ? 'error' : ''}
+        help={bankDetailsFormErrors.accountNumber?.message}
+      >
+        <Label>
+          <sup>*</sup>
+        </Label>
+        <Controller
+          render={({ field }) => (
+            <Input
+              {...field}
+              onChange={(e) => {
+                setValue('accountNumber', e.target.value.replace(/\s/g, ''))
+              }}
+              placeholder={''}
+            />
+          )}
+          name='accountNumber'
+          control={bankDetailsFormControl}
+        />
+      </Form.Item>
+      <Button
+        type='primary'
+        htmlType='submit'
+        disabled={!bankDetailsFormState.isDirty || !bankDetailsFormState.isValid}
+      >
+        Submit
+      </Button>
+    </Form>
+  )
 }
 
 export default CountryBankAccount
