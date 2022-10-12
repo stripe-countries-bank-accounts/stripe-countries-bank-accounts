@@ -4,6 +4,13 @@
          alt="Gitter">
   </a>
 
+<hr/>
+<h2>Description</h2>
+
+<p>
+This package is providing a short bank detail form for 43 countries which are supported by Stripe. It's including dynamic fields for Account Number, Routing Number, Clearing Number, IBAN, BIC and etc.
+</p>
+
 <h2>How To Use</h2>
 
 ```js
