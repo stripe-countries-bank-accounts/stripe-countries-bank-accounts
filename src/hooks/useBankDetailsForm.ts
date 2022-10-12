@@ -30,6 +30,15 @@ export default function useBankDetailsForm({
         countryData?.account_number?.label,
         isCompanyAccount,
       ),
+      {
+        abortEarly: true,
+        allowUnknown: true,
+        errors: {
+          wrap: {
+            label: '',
+          },
+        },
+      },
     ),
   })
 

@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { BankDetailsInputs } from './type'
+// import { BankDetailsInputs } from './type'
 
 export const BankDetailsSchema = (
   firstRoutingNumberLabel?: string,
@@ -13,7 +13,7 @@ export const BankDetailsSchema = (
   isCompanyAccount?: boolean,
 ) => {
   const pattern = accountNumberRegex && new RegExp(accountNumberRegex.slice(1, -1), 'g')
-  return Joi.object<BankDetailsInputs>({
+  return Joi.object().keys({
     accountOwnerFirstName: isCompanyAccount
       ? Joi.string().label('Account Owner First Name').required()
       : Joi.string().label('Account Owner First Name').optional().allow(''),
