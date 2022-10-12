@@ -11,7 +11,7 @@ const CountryBankAccount = ({ countryCode, businessType, onComplete }: BankAccou
   const countryData = countryCode && bankInfoObject[countryCode]
 
   const { bankDetailsFormControl, bankDetailsFormErrors, setValue, bankDetailsFormState, submitBankDetailsForm } =
-    useBankDetailsForm(countryData, businessType === BusinessType.COMPANY, onComplete)
+    useBankDetailsForm({ countryData, isCompanyAccount: businessType === BusinessType.COMPANY, onComplete })
   return (
     <Form onFinish={() => submitBankDetailsForm()}>
       {businessType === BusinessType.COMPANY && (
