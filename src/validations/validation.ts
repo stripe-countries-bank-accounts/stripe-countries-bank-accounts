@@ -1,4 +1,5 @@
 import Joi from 'joi'
+import { BankDetailsInputs } from './type'
 
 export const BankDetailsSchema = (
   firstRoutingNumberLabel?: string,
@@ -9,11 +10,16 @@ export const BankDetailsSchema = (
   secondRoutingMin?: number,
   accountNumberRegex?: string,
   accountNumberLabel?: string,
+  isCompanyAccount?: boolean,
 ) => {
   const pattern = accountNumberRegex && new RegExp(accountNumberRegex.slice(1, -1), 'g')
-  return {
-    accountOwnerFirstName: Joi.string().label('Account Owner First Name').required(),
-    accountOwnerLastName: Joi.string().label('Account Owner Last Name').required(),
+  return Joi.object<BankDetailsInputs>({
+    accountOwnerFirstName: isCompanyAccount
+      ? Joi.string().label('Account Owner First Name').required()
+      : Joi.string().label('Account Owner First Name').optional().allow(''),
+    accountOwnerLastName: isCompanyAccount
+      ? Joi.string().label('Account Owner Last Name').required()
+      : Joi.string().label('Account Owner Last Name').optional().allow(''),
     routingNumber1:
       firstRoutingNumberLabel && firstRoutingMin && firstRoutingMax
         ? Joi.string().label(firstRoutingNumberLabel).required().max(firstRoutingMax).min(firstRoutingMin)
@@ -26,5 +32,5 @@ export const BankDetailsSchema = (
       accountNumberLabel && pattern
         ? Joi.string().pattern(pattern).label(accountNumberLabel).required()
         : accountNumberLabel && Joi.string().label(accountNumberLabel).required(),
-  }
+  })
 }

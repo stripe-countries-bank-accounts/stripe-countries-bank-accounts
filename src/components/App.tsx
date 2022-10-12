@@ -5,25 +5,13 @@ import { Label } from './styles'
 import { bankInfoObject } from '../bank-info-object'
 import { BusinessType } from '../enums'
 import useBankDetailsForm from '../hooks/useBankDetailsForm'
+import { BankAccountProps } from '../interfaces'
 
-interface Result {
-  routing_number: string
-  account_number: string
-  account_holder_first_name?: string
-  account_holder_last_name?: string
-}
-
-interface Props {
-  countryCode?: keyof typeof bankInfoObject
-  businessType?: string
-  onComplete?: (res: Result) => void
-}
-
-const CountryBankAccount = ({ countryCode, businessType, onComplete }: Props) => {
+const CountryBankAccount = ({ countryCode, businessType, onComplete }: BankAccountProps) => {
   const countryData = countryCode && bankInfoObject[countryCode]
 
   const { bankDetailsFormControl, bankDetailsFormErrors, setValue, bankDetailsFormState, submitBankDetailsForm } =
-    useBankDetailsForm(countryData, onComplete)
+    useBankDetailsForm(countryData, businessType === BusinessType.COMPANY, onComplete)
   return (
     <Form onFinish={() => submitBankDetailsForm()}>
       {businessType === BusinessType.COMPANY && (

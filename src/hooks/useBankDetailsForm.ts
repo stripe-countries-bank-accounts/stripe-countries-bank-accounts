@@ -1,25 +1,14 @@
-import { BaseSyntheticEvent, useEffect } from 'react'
-// import { joiResolver } from '@hookform/resolvers/joi'
-import { BankDetailsInputs } from '../validations'
-import { Control, DeepMap, FieldError, FormState, useForm, UseFormGetValues, UseFormSetValue } from 'react-hook-form'
+import { useEffect } from 'react'
+import { joiResolver } from '@hookform/resolvers/joi'
+import { useForm } from 'react-hook-form'
+import { BankDetailsInputs, BankDetailsSchema } from '../validations'
+import { BankDetailsForm, BankDetailsFormProps } from '../interfaces'
 
-interface Result {
-  routing_number: string
-  account_number: string
-  account_holder_first_name?: string
-  account_holder_last_name?: string
-}
-
-interface BankDetailsForm {
-  bankDetailsFormErrors: DeepMap<BankDetailsInputs, FieldError>
-  bankDetailsFormControl: Control<BankDetailsInputs>
-  getFieldValue: UseFormGetValues<BankDetailsInputs>
-  bankDetailsFormState: FormState<BankDetailsInputs>
-  setValue: UseFormSetValue<BankDetailsInputs>
-  submitBankDetailsForm: (e?: BaseSyntheticEvent<Record<string, unknown>, any, any>) => Promise<void>
-}
-
-export default function useBankDetailsForm(countryData: any, onComplete?: (res: Result) => void): BankDetailsForm {
+export default function useBankDetailsForm({
+  countryData,
+  isCompanyAccount,
+  onComplete,
+}: BankDetailsFormProps): BankDetailsForm {
   const {
     handleSubmit,
     formState: { errors: bankDetailsFormErrors },
@@ -29,18 +18,19 @@ export default function useBankDetailsForm(countryData: any, onComplete?: (res: 
     getValues: getFieldValue,
   } = useForm<BankDetailsInputs>({
     mode: 'all',
-    // resolver: joiResolver(
-    //   BankDetailsSchema(
-    //     countryData?.routing_number_1?.label,
-    //     countryData?.routing_number_2?.label,
-    //     countryData?.routing_number_1?.pattern?.max,
-    //     countryData?.routing_number_1?.pattern?.min,
-    //     countryData?.routing_number_2?.pattern?.max,
-    //     countryData?.routing_number_2?.pattern?.min,
-    //     countryData?.account_number?.pattern?.regex,
-    //     countryData?.account_number?.label,
-    //   ),
-    // ),
+    resolver: joiResolver(
+      BankDetailsSchema(
+        countryData?.routing_number_1?.label,
+        countryData?.routing_number_2?.label,
+        countryData?.routing_number_1?.pattern?.max,
+        countryData?.routing_number_1?.pattern?.min,
+        countryData?.routing_number_2?.pattern?.max,
+        countryData?.routing_number_2?.pattern?.min,
+        countryData?.account_number?.pattern?.regex,
+        countryData?.account_number?.label,
+        isCompanyAccount,
+      ),
+    ),
   })
 
   useEffect(() => {
