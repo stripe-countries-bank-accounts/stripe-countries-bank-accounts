@@ -5,7 +5,6 @@
   </a>
 
 <h2>How To Use</h2>
-<hr/>
 
 ```js
 import { CountryBankAccount } from 'stripe-countries-bank-accounts';
