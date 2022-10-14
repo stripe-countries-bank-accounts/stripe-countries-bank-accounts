@@ -1,6 +1,6 @@
 {
   "name": "stripe-countries-bank-accounts",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "This package is providing a short bank detail form for 43 countries which are supported by Stripe. It's including dynamic fields for Account Number, Routing Number, Clearing Number, IBAN, BIC and etc.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
